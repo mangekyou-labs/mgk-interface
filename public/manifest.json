@@ -1,0 +1,9 @@
+{
+  "short_name": "MGK",
+  "name": "MGK",
+  "description": "Trade spot or perpetual with up to 100x leverage directly from your wallet.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#2d42fc",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,167 @@
+import React, { useRef, useEffect, useMemo, PropsWithChildren, useCallback, ReactNode } from "react";
+import cx from "classnames";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { RemoveScroll } from "react-remove-scroll";
+import { MdClose } from "react-icons/md";
+
+import "./Modal.css";
+
+const FADE_VARIANTS: Variants = {
+  hidden: { opacity: 0, pointerEvents: "none" },
+  visible: { opacity: 1, pointerEvents: "auto" },
+};
+
+const VISIBLE_STYLES: React.CSSProperties = {
+  overflow: "hidden",
+  position: "fixed",
+};
+
+const HIDDEN_STYLES: React.CSSProperties = {
+  overflow: "visible",
+  position: "fixed",
+};
+
+const TRANSITION = { duration: 0.2 };
+
+export type ModalProps = PropsWithChildren<{
+  className?: string;
+  isVisible?: boolean;
+  setIsVisible: (isVisible: boolean) => void;
+  zIndex?: number;
+  label?: React.ReactNode;
+  headerContent?: React.ReactNode;
+  footerContent?: ReactNode;
+  onAfterOpen?: () => void;
+  contentPadding?: boolean;
+  qa?: string;
+  noDivider?: boolean;
+  onClose?: () => void;
+}>;
+
+export default function Modal({
+  className,
+  isVisible,
+  label,
+  zIndex,
+  children,
+  headerContent,
+  footerContent,
+  contentPadding = true,
+  noDivider = false,
+  onAfterOpen,
+  setIsVisible,
+  onClose,
+  qa,
+}: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const modalBodyRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose();
+    } else {
+      setIsVisible(false);
+    }
+  }, [onClose, setIsVisible]);
+
+  useEffect(() => {
+    function close(e: KeyboardEvent) {
+      if (e.keyCode === 27) {
+        handleClose();
+      }
+    }
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [handleClose]);
+
+  useEffect(() => {
+    if (typeof onAfterOpen === "function" && isVisible) {
+      onAfterOpen();
+    }
+  }, [onAfterOpen, isVisible]);
+
+  useEffect(
+    function blurOutsideOnVisible() {
+      if (isVisible) {
+        const focusedElement = document.activeElement;
+        const isNotBody = !document.body.isSameNode(focusedElement);
+        const isOutside = !modalRef.current?.contains(focusedElement);
+
+        if (focusedElement && isNotBody && isOutside) {
+          (focusedElement as HTMLElement).blur();
+        }
+      }
+    },
+    [isVisible]
+  );
+
+  const style = useMemo(() => ({ zIndex }), [zIndex]);
+
+  const stopPropagation = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleClose();
+    }
+  }, [handleClose]);
+
+  const handleCloseClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleClose();
+  }, [handleClose]);
+
+  return (
+    <AnimatePresence mode="wait">
+      {isVisible && (
+        <RemoveScroll>
+          <motion.div
+            className={cx("Modal", className)}
+            ref={modalRef}
+            style={style}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={FADE_VARIANTS}
+            transition={TRANSITION}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="Modal-backdrop"
+              style={isVisible ? VISIBLE_STYLES : HIDDEN_STYLES}
+              onClick={handleBackdropClick}
+            />
+            <div className="Modal-content flex flex-col" onClick={stopPropagation} data-qa={qa}>
+              <div className="Modal-header-wrapper">
+                <div className="Modal-title-bar">
+                  <div className="Modal-title">{label}</div>
+                  <div className="Modal-close-button pb-5" onClick={handleCloseClick}>
+                    <MdClose fontSize={20} className="Modal-close-icon" />
+                  </div>
+                </div>
+                {headerContent}
+              </div>
+              {!noDivider && <div className="divider" />}
+              <div className="overflow-auto">
+                <div className={cx("Modal-body", { "no-content-padding": !contentPadding })} ref={modalBodyRef}>
+                  {children}
+                </div>
+              </div>
+              {footerContent && (
+                <>
+                  <div className="divider" />
+                  <div>{footerContent}</div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </RemoveScroll>
+      )}
+    </AnimatePresence>
+  );
+}

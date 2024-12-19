@@ -1,0 +1,36 @@
+.theme-dark:root {
+  --tv-color-platform-background: #1c1c1c;
+  --color-red-600: #ff3c3c;
+  --dark-red-bg: #2d1515;
+  --themed-color-bg-primary: #2d1515;
+  --themed-color-properties-dialog-tab-bg: #ff3c3c;
+  --themed-color-properties-dialog-tab-text: #ffffff;
+  --themed-color-properties-dialog-defaults-text: #b2b5be;
+  --themed-color-properties-dialog-tab-active-text: #ffffff;
+  --themed-color-item-row-bg-hover: var(--dark-red-bg);
+  --themed-color-background-hover: var(--dark-red-bg);
+  --themed-color-toolbar-button-background-hover: #3a1c1c;
+  --themed-color-toolbar-button-background-expanded: #4a2020;
+  --themed-color-toolbar-button-background-active: #2d1515;
+  --themed-color-toolbar-button-border: #4a2020;
+  --themed-color-common-tooltip-bg: #2d1515;
+  --themed-color-container-fill-primary-accent: var(--color-red-600);
+  --priceScaleModeButtons-background-activated: var(--color-red-600);
+  --themed-color-background-selected: var(--color-red-600);
+  --themed-color-background-special-secondary: var(--color-red-600);
+}
+
+html.theme-dark button:not(:disabled),
+html.theme-dark [data-role="button"],
+html.theme-dark [data-role="list-item"],
+html.theme-dark [data-role="menuitem"] {
+  color: #ffffff;
+}
+
+html.theme-dark .chart-page {
+  background: #2d1515;
+}
+
+html.theme-dark .chart-controls-bar {
+  background: #2d1515;
+}

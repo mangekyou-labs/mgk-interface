@@ -1,0 +1,20 @@
+.BeginAccountTransfer {
+    &-content {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    &-warning {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: var(--error-background);
+        color: var(--error-text);
+        border-radius: 0.4rem;
+    }
+
+    &-buttons {
+        margin-top: 2rem;
+    }
+}

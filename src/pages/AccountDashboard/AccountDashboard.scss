@@ -1,0 +1,28 @@
+.AccountDashboard {
+    &-header {
+        margin-bottom: 1.5rem;
+    }
+
+    &-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &-chain-info {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    &-address-info {
+        margin-bottom: 1.5rem;
+    }
+
+    &-content {
+        &-main {
+            padding: 1.5rem;
+            background: var(--background-secondary);
+            border-radius: 0.4rem;
+        }
+    }
+}
